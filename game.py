@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+
 pygame.init()
 
 pygame.display.set_caption("Diji")
@@ -49,6 +50,8 @@ def setUpGame():
     pygame.draw.rect(screen, (0,0,0), objectD)
     pygame.draw.rect(screen, (0,0,0), cornerD1)
     pygame.draw.rect(screen, (0,0,0), cornerD2)
+    pygame.draw.rect(screen, (0,0,0), edgeD1)
+    pygame.draw.rect(screen, (0,0,0), edgeD2)
     pygame.draw.rect(screen, (0,0,0), prizeOb1)
     pygame.draw.circle(screen, (225,225,225), (15,360), 12)
     pygame.draw.rect(screen, (0,0,0), prizeOb2)
@@ -114,6 +117,13 @@ def connectPaths():
 
         pygame.draw.line(screen, (0,0,0), (edgeC1.center), (objectC.center), 51)
         pygame.draw.line(screen, (0,0,0), (edgeC1.center), (prizeOb1.midbottom), 51)
+        pygame.draw.line(screen, (0,0,0), (edgeC2.center), (objectC.center), 51)
+        pygame.draw.line(screen, (0,0,0), (edgeC2.center), (prizeOb4.midleft), 51)
+
+        pygame.draw.line(screen, (0,0,0), (edgeD1.center), (objectD.center), 51)
+        pygame.draw.line(screen, (0,0,0), (edgeD1.center), (prizeOb3.midbottom), 51)
+        pygame.draw.line(screen, (0,0,0), (edgeD2.center), (objectD.center), 51)
+        pygame.draw.line(screen, (0,0,0), (edgeD2.center), (prizeOb4.midright), 51)
 
         pygame.draw.rect(screen, (255, 0, 0), player)
 
@@ -170,17 +180,21 @@ cornerD2 = pygame.Rect(670, random.randint(390,620), 51, 51)
 cordsD = generatePath(objectD, centerObject)
 connectDcenter = pygame.Rect(cordsD[0], cordsD[1], 51, 51)
 
+edgeD1 = pygame.Rect(670, objectD.top, 51, 51)
+edgeD2 = pygame.Rect(objectD.left, 670, 51, 51)
+
 
 
 objectList = [centerObject, objectA, cornerA1, cornerA2, objectB, cornerB1, cornerB2, 
-              objectC, cornerC1, cornerC2, objectD, cornerD1, cornerD2, prizeOb1, prizeOb2, prizeOb3, prizeOb4]
+              objectC, cornerC1, cornerC2, objectD, cornerD1, cornerD2, prizeOb1, prizeOb2, prizeOb3, prizeOb4,
+              edgeA1, edgeA2, edgeB1, edgeB2, edgeC1, edgeC2, edgeD1, edgeD2 ]
 
 
 #game loop runs and looks for events
 run = True;
 while run:
     time.sleep(0.003)
-    screen.fill((200,0,0)) 
+    screen.fill((255,255,255)) 
     setUpGame()
     connectPaths()
    
