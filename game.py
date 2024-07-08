@@ -7,11 +7,7 @@ pygame.init()
 pygame.display.set_caption("Diji")
 res = (720, 720)
 screen = pygame.display.set_mode(res)
-
-
 graph = gameGraph.Graph()
-
-
 
 #randomly picks one of two ways to get from one vertex to another using two lines
 def generatePath(start, end):
@@ -30,27 +26,27 @@ def generateRandomLocation(startx, endx, starty, endy):
 #Used to ensure player can only walk on the generated path
 def isOnPath(key):
     if (key == 'a'):
-        if pygame.Surface.get_at(screen, (player.left - 1, player.top)) == (0,0,0) and pygame.Surface.get_at(screen, (player.left - 1, player.bottom)) == (0,0,0):
-            if pygame.Surface.get_at(screen, (player.left - 1, player.centery)) == (0,0,0):
+        if pygame.Surface.get_at(screen, (player.left - 1, player.top)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.left - 1, player.bottom)) == (44, 21, 0):
+            if pygame.Surface.get_at(screen, (player.left - 1, player.centery)) == (44, 21, 0):
                 return True
         for x in vertexList:
             if x.collidepoint(player.left - 1, player.top):
                 return True
     elif (key == 'd'):
-        if pygame.Surface.get_at(screen, (player.right + 1, player.bottom)) == (0,0,0) and pygame.Surface.get_at(screen, (player.right + 1, player.top)) == (0,0,0):
-            if pygame.Surface.get_at(screen, (player.right + 1, player.centery)) == (0,0,0):
+        if pygame.Surface.get_at(screen, (player.right + 1, player.bottom)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.right + 1, player.top)) == (44, 21, 0):
+            if pygame.Surface.get_at(screen, (player.right + 1, player.centery)) == (44, 21, 0):
                 return True
         for x in vertexList:
             if x.collidepoint(player.right + 1, player.bottom):
                 return True
     elif (key == 'w'):
-        if pygame.Surface.get_at(screen, (player.left, player.top - 1)) == (0,0,0) and pygame.Surface.get_at(screen, (player.right, player.top - 1)) == (0,0,0):
+        if pygame.Surface.get_at(screen, (player.left, player.top - 1)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.right, player.top - 1)) == (44, 21, 0):
             return True
         for x in vertexList:
             if x.collidepoint(player.x, player.y - 1):
                 return True    
     elif (key == 's'):
-        if pygame.Surface.get_at(screen, (player.right, player.bottom + 1)) == (0,0,0) and pygame.Surface.get_at(screen, (player.left, player.bottom + 1)) == (0,0,0):
+        if pygame.Surface.get_at(screen, (player.right, player.bottom + 1)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.left, player.bottom + 1)) == (44, 21, 0):
             return True
         for x in vertexList:
             if x.collidepoint(player.right, player.bottom + 1):
@@ -68,8 +64,6 @@ targetVertex4 = pygame.Rect(335,670,51,51)
 
 #creates vertices in the first quadrant
 vertexA = pygame.Rect((generateRandomLocation(70, 230, 70, 230)[0], generateRandomLocation(70,230,70,230)[1], 51, 51)) 
-cornerA1 = pygame.Rect((random.randint(51, 280), 0, 51, 51))
-cornerA2 = pygame.Rect((0, random.randint(51, 280), 51, 51))
 cordsA = generatePath(vertexA, centerVertex)
 connectAcenter = pygame.Rect(cordsA[0], cordsA[1], 51, 51)
 edgeA1 = pygame.Rect(0, vertexA.top, 51, 51)
@@ -77,8 +71,6 @@ edgeA2 = pygame.Rect(vertexA.left, 0, 51, 51)
 
 #creates vertices in the second quadrant
 vertexB = pygame.Rect((generateRandomLocation(390, 600, 70, 230)[0], generateRandomLocation(340, 600, 70, 230)[1], 51, 51)) 
-cornerB1 = pygame.Rect(random.randint(390,620), 0, 51, 51)
-cornerB2 = pygame.Rect(670, random.randint(51,280), 51, 51)
 cordsB = generatePath(vertexB, centerVertex)
 connectBcenter = pygame.Rect(cordsB[0], cordsB[1], 51, 51)
 edgeB1 = pygame.Rect(670, vertexB.top, 51, 51)
@@ -86,8 +78,6 @@ edgeB2 = pygame.Rect(vertexB.left, 0, 51, 51)
 
 #creates vertices in the third quadrant
 vertexC = pygame.Rect((generateRandomLocation(70, 230, 390, 600)[0], generateRandomLocation(70, 230, 390, 600)[1], 51, 51))
-cornerC1 = pygame.Rect(random.randint(51,280), 670, 51, 51)
-cornerC2 = pygame.Rect(0, random.randint(390,620), 51, 51)
 cordsC = generatePath(vertexC, centerVertex)
 connectCcenter = pygame.Rect(cordsC[0], cordsC[1], 51, 51)
 edgeC1 = pygame.Rect(0, vertexC.top, 51, 51)
@@ -95,8 +85,6 @@ edgeC2 = pygame.Rect(vertexC.left, 670, 51, 51)
 
 #creates vertices in the fourth quadrant
 vertexD = pygame.Rect((generateRandomLocation(440, 600, 440, 600)[0], generateRandomLocation(440, 600, 440, 600)[1], 51, 51)) 
-cornerD1 = pygame.Rect(random.randint(390,620), 670, 51, 51)
-cornerD2 = pygame.Rect(670, random.randint(390,620), 51, 51)
 cordsD = generatePath(vertexD, centerVertex)
 connectDcenter = pygame.Rect(cordsD[0], cordsD[1], 51, 51)
 edgeD1 = pygame.Rect(670, vertexD.top, 51, 51)
@@ -109,105 +97,89 @@ player = pygame.Rect((345,345,30,30))
 #randomly generates the physical roadmap for diji
 def set_up_game():
     #spawn in all vertices
-    pygame.draw.rect(screen, (0,0,0), centerVertex)
-    pygame.draw.rect(screen, (0,0,0), vertexA)
-    pygame.draw.rect(screen, (0,0,0), cornerA1)
-    pygame.draw.rect(screen, (0,0,0), cornerA2)
-    pygame.draw.rect(screen, (0,0,0), edgeA1)
-    pygame.draw.rect(screen, (0,0,0), edgeA2)
-    pygame.draw.rect(screen, (0,0,0), vertexB)
-    pygame.draw.rect(screen, (0,0,0), cornerB1)
-    pygame.draw.rect(screen, (0,0,0), cornerB2)
-    pygame.draw.rect(screen, (0,0,0), edgeB1)
-    pygame.draw.rect(screen, (0,0,0), edgeB2)
-    pygame.draw.rect(screen, (0,0,0), vertexC)
-    pygame.draw.rect(screen, (0,0,0), cornerC1)
-    pygame.draw.rect(screen, (0,0,0), cornerC2)
-    pygame.draw.rect(screen, (0,0,0), edgeC1)
-    pygame.draw.rect(screen, (0,0,0), edgeC2)
-    pygame.draw.rect(screen, (0,0,0), vertexD)
-    pygame.draw.rect(screen, (0,0,0), cornerD1)
-    pygame.draw.rect(screen, (0,0,0), cornerD2)
-    pygame.draw.rect(screen, (0,0,0), edgeD1)
-    pygame.draw.rect(screen, (0,0,0), edgeD2)
-    pygame.draw.rect(screen, (0,0,0), targetVertex1)
+    pygame.draw.rect(screen, (44, 21, 0), centerVertex)
+    pygame.draw.rect(screen, (44, 21, 0), vertexA)
+    pygame.draw.rect(screen, (44, 21, 0), edgeA1)
+    pygame.draw.rect(screen, (44, 21, 0), edgeA2)
+    pygame.draw.rect(screen, (44, 21, 0), vertexB)
+    pygame.draw.rect(screen, (44, 21, 0), edgeB1)
+    pygame.draw.rect(screen, (44, 21, 0), edgeB2)
+    pygame.draw.rect(screen, (44, 21, 0), vertexC)
+    pygame.draw.rect(screen, (44, 21, 0), edgeC1)
+    pygame.draw.rect(screen, (44, 21, 0), edgeC2)
+    pygame.draw.rect(screen, (44, 21, 0), vertexD)
+    pygame.draw.rect(screen, (44, 21, 0), edgeD1)
+    pygame.draw.rect(screen, (44, 21, 0), edgeD2)
+    pygame.draw.rect(screen, (44, 21, 0), targetVertex1)
     pygame.draw.circle(screen, (225,225,225), (15,360), 12)
-    pygame.draw.rect(screen, (0,0,0), targetVertex2)
+    pygame.draw.rect(screen, (44, 21, 0), targetVertex2)
     pygame.draw.circle(screen, (225,225,225), (360,15), 12)
-    pygame.draw.rect(screen, (0,0,0), targetVertex3)
+    pygame.draw.rect(screen, (44, 21, 0), targetVertex3)
     pygame.draw.circle(screen, (225,225,225), (705,360), 12)
-    pygame.draw.rect(screen, (0,0,0), targetVertex4)
+    pygame.draw.rect(screen, (44, 21, 0), targetVertex4)
     pygame.draw.circle(screen, (225,225,225), (360,705), 12)
-    pygame.draw.line(screen, (0,0,0), (targetVertex1.midtop), (cornerA2.midtop), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex1.midbottom), (cornerC2.midbottom), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex2.midleft), (cornerA1.midleft), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex2.midright), (cornerB1.midright), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex3.midtop), (cornerB2.midtop), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex3.midbottom), (cornerD2.midbottom), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex4.midleft), (cornerC1.midleft), 51)
-    pygame.draw.line(screen, (0,0,0), (targetVertex4.midright), (cornerD1.midright), 51)
-    pygame.draw.rect(screen, (0,0,255), player)
+    pygame.draw.rect(screen, (232, 214, 203), player)
     
 
 #Connects center vertex to the intermediate vertices, connects the intermediate vertices to the respective quadrant vertex
 def connect_center_to_vertices():
         
-        pygame.draw.rect(screen, (0,0,0), connectAcenter)
+        pygame.draw.rect(screen, (44, 21, 0), connectAcenter)
         if cordsA[2] == 1:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midleft), (connectAcenter.midleft), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midleft), (connectAcenter.midleft), 51)
         else:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midtop), (connectAcenter.midtop), 51)
-        pygame.draw.line(screen, (0,0,0), (connectAcenter.center), (vertexA.center), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midtop), (connectAcenter.midtop), 51)
+        pygame.draw.line(screen, (44, 21, 0), (connectAcenter.center), (vertexA.center), 51)
         
-        pygame.draw.rect(screen, (0,0,0), connectBcenter)
+        pygame.draw.rect(screen, (44, 21, 0), connectBcenter)
 
         if cordsB[2] == 1:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midright), (connectBcenter.midleft), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midright), (connectBcenter.midleft), 51)
         else:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midtop), (connectBcenter.midtop), 51)
-        pygame.draw.line(screen, (0,0,0), (connectBcenter.center), (vertexB.center), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midtop), (connectBcenter.midtop), 51)
+        pygame.draw.line(screen, (44, 21, 0), (connectBcenter.center), (vertexB.center), 51)
 
-        pygame.draw.rect(screen, (0,0,0), connectCcenter)
+        pygame.draw.rect(screen, (44, 21, 0), connectCcenter)
 
         if cordsC[2] == 1:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midright), (connectCcenter.midleft), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midright), (connectCcenter.midleft), 51)
         else:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midtop), (connectCcenter.midtop), 51)
-        pygame.draw.line(screen, (0,0,0), (connectCcenter.center), (vertexC.center), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midtop), (connectCcenter.midtop), 51)
+        pygame.draw.line(screen, (44, 21, 0), (connectCcenter.center), (vertexC.center), 51)
 
-        pygame.draw.rect(screen, (0,0,0), connectDcenter)
+        pygame.draw.rect(screen, (44, 21, 0), connectDcenter)
 
         if cordsD[2] == 1:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midright), (connectDcenter.midleft), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midright), (connectDcenter.midleft), 51)
         else:
-            pygame.draw.line(screen, (0,0,0), (centerVertex.midtop), (connectDcenter.midtop), 51)
+            pygame.draw.line(screen, (44, 21, 0), (centerVertex.midtop), (connectDcenter.midtop), 51)
 
-        pygame.draw.line(screen, (0,0,0), (connectDcenter.center), (vertexD.center), 51)
+        pygame.draw.line(screen, (44, 21, 0), (connectDcenter.center), (vertexD.center), 51)
 
-        pygame.draw.rect(screen, (255, 0, 0), player)
+        pygame.draw.rect(screen, (232, 214, 203), player)
 
 
 #Connects each quadrant vertex to both edges of the map
 def connect_vertices_edges():
-    pygame.draw.line(screen, (0,0,0), (edgeA1.center), (vertexA.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeA1.center), (targetVertex1.midtop), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeA2.center), (vertexA.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeA2.center), (targetVertex2.midleft), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeA1.center), (vertexA.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeA1.center), (targetVertex1.midtop), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeA2.center), (vertexA.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeA2.center), (targetVertex2.midleft), 51)
 
-    pygame.draw.line(screen, (0,0,0), (edgeB1.center), (vertexB.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeB1.center), (targetVertex3.midtop), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeB2.center), (vertexB.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeB2.center), (targetVertex2.midright), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeB1.center), (vertexB.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeB1.center), (targetVertex3.midtop), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeB2.center), (vertexB.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeB2.center), (targetVertex2.midright), 51)
 
-    pygame.draw.line(screen, (0,0,0), (edgeC1.center), (vertexC.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeC1.center), (targetVertex1.midbottom), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeC2.center), (vertexC.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeC2.center), (targetVertex4.midleft), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeC1.center), (vertexC.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeC1.center), (targetVertex1.midbottom), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeC2.center), (vertexC.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeC2.center), (targetVertex4.midleft), 51)
 
-    pygame.draw.line(screen, (0,0,0), (edgeD1.center), (vertexD.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeD1.center), (targetVertex3.midbottom), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeD2.center), (vertexD.center), 51)
-    pygame.draw.line(screen, (0,0,0), (edgeD2.center), (targetVertex4.midright), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeD1.center), (vertexD.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeD1.center), (targetVertex3.midbottom), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeD2.center), (vertexD.center), 51)
+    pygame.draw.line(screen, (44, 21, 0), (edgeD2.center), (targetVertex4.midright), 51)
 
 #calculates the distance between vertex1 and vertex2 in pixels
 def calculate_distance(vertex1, vertex2):
@@ -261,20 +233,20 @@ def add_to_graph():
     graph.add_edge('targetVertex3', 'edgeD1', calculate_distance(targetVertex3, edgeD1))
     graph.add_edge('targetVertex4', 'edgeC2', calculate_distance(targetVertex4, edgeC2))
     graph.add_edge('targetVertex4', 'edgeD2', calculate_distance(targetVertex4, edgeD2))
-    #print(graph.get_weight('targetVertex4', 'edgeD2'))
+
 
     #DO CORNERS TO EDGES!!
 
 #Creates a list of all vertices to be used for collision checking and graph implementation
-vertexList = [centerVertex, vertexA, cornerA1, cornerA2, vertexB, cornerB1, cornerB2, 
-              vertexC, cornerC1, cornerC2, vertexD, cornerD1, cornerD2, targetVertex1, targetVertex2, targetVertex3, targetVertex4,
+vertexList = [centerVertex, vertexA, vertexB, 
+              vertexC, vertexD,  targetVertex1, targetVertex2, targetVertex3, targetVertex4,
               edgeA1, edgeA2, edgeB1, edgeB2, edgeC1, edgeC2, edgeD1, edgeD2 ]
 
 #game loop runs and looks for events
 run = True;
 while run:
     time.sleep(0.003)
-    screen.fill((255,255,255)) 
+    screen.fill((241, 90, 34)) 
     set_up_game()
     connect_vertices_edges()
     connect_center_to_vertices()
