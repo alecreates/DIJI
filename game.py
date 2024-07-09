@@ -9,6 +9,8 @@ res = (720, 720)
 screen = pygame.display.set_mode(res)
 graph = gameGraph.Graph()
 
+
+
 #randomly picks one of two ways to get from one vertex to another using two lines
 def generatePath(start, end):
     path = random.randint(1,2)
@@ -96,6 +98,7 @@ player = pygame.Rect((345,345,30,30))
 
 #randomly generates the physical roadmap for diji
 def set_up_game():
+    screen.fill((241, 90, 34)) 
     #spawn in all vertices
     pygame.draw.rect(screen, (44, 21, 0), centerVertex)
     pygame.draw.rect(screen, (44, 21, 0), vertexA)
@@ -235,23 +238,47 @@ def add_to_graph():
     graph.add_edge('targetVertex4', 'edgeD2', calculate_distance(targetVertex4, edgeD2))
 
 
-    #DO CORNERS TO EDGES!!
-
 #Creates a list of all vertices to be used for collision checking and graph implementation
-vertexList = [centerVertex, vertexA, vertexB, 
-              vertexC, vertexD,  targetVertex1, targetVertex2, targetVertex3, targetVertex4,
-              edgeA1, edgeA2, edgeB1, edgeB2, edgeC1, edgeC2, edgeD1, edgeD2 ]
+vertexList = [centerVertex, vertexA, vertexB, vertexC, vertexD,  targetVertex1, 
+              targetVertex2, targetVertex3, targetVertex4, edgeA1, edgeA2, edgeB1, 
+              edgeB2, edgeC1, edgeC2, edgeD1, edgeD2]
 
-#game loop runs and looks for events
-run = True;
+
+#Start screen loop
+run = True
 while run:
-    time.sleep(0.003)
-    screen.fill((241, 90, 34)) 
+    screen.fill((128,0,0))
+    startButton = pygame.Rect(310, 335, 100, 50)
+    pygame.draw.rect(screen, (0,0,0), startButton)
+    pygame.font.init()
+    green = (0, 255, 0)
+    blue = (0, 0, 128)
+    buttonFont = pygame.font.Font('freesansbold.ttf', 15)
+    titleFont = pygame.font.Font('freesansbold.ttf', 55)
+    buttonText = buttonFont.render('START', True, green)
+    titleText = titleFont.render('DIJI', True, green)
+    screen.blit(buttonText, (335,350))
+    screen.blit(titleText, (335,100))
+    
+    ev = pygame.event.get()
+    for event in ev:
+        if event.type==pygame.QUIT:
+            pygame.quit()
+        if event.type==pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            if startButton.collidepoint(pos):
+                run = False
+
+    pygame.display.update()
+#main game loop runs and looks for events
+run = True
+while run:
+    ev = pygame.event.get()
+    time.sleep(0.002)
     set_up_game()
     connect_vertices_edges()
     connect_center_to_vertices()
     add_to_graph()
-    
     
     key = pygame.key.get_pressed()
     if key[pygame.K_a] == True and isOnPath('a') and player.left - 1 != 0:
@@ -263,15 +290,11 @@ while run:
     elif key[pygame.K_s] == True and isOnPath('s') and player.bottom + 1 != 720:
         player.move_ip(0, 1)
     
-    for event in pygame.event.get():
+    for event in ev:
         if event.type==pygame.QUIT:
             run = False
-            
+
     pygame.display.update()
-
-
-
-
 
 pygame.quit()
 
