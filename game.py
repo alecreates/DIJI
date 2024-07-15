@@ -9,8 +9,6 @@ res = (720, 720)
 screen = pygame.display.set_mode(res)
 graph = gameGraph.Graph()
 
-
-
 #randomly picks one of two ways to get from one vertex to another using two lines
 def generatePath(start, end):
     path = random.randint(1,2)
@@ -55,8 +53,6 @@ def isOnPath(key):
                 return True
     return False
 
-
-
 centerVertex = pygame.Rect((335, 335, 51, 51)) 
 #creates target vertices
 targetVertex1 = pygame.Rect(0, 335, 51, 51)
@@ -93,8 +89,6 @@ edgeD1 = pygame.Rect(670, vertexD.top, 51, 51)
 edgeD2 = pygame.Rect(vertexD.left, 670, 51, 51)
 
 player = pygame.Rect((345,345,30,30))
-
-
 
 #randomly generates the physical roadmap for diji
 def set_up_game():
@@ -239,26 +233,27 @@ def add_to_graph():
 
 
 #Creates a list of all vertices to be used for collision checking and graph implementation
-vertexList = [centerVertex, vertexA, vertexB, vertexC, vertexD,  targetVertex1, 
-              targetVertex2, targetVertex3, targetVertex4, edgeA1, edgeA2, edgeB1, 
-              edgeB2, edgeC1, edgeC2, edgeD1, edgeD2]
+vertexList = [centerVertex, connectAcenter, connectBcenter, connectCcenter, connectDcenter,
+              vertexA, vertexB, vertexC, vertexD, 
+              edgeA1, edgeA2, edgeB1, edgeB2, edgeC1, edgeC2, edgeD1, edgeD2, 
+              targetVertex1, targetVertex2, targetVertex3, targetVertex4]
 
+#Creates a list of all target objects
+targetObjects = [targetVertex1, targetVertex2, targetVertex3, targetVertex4]
 
 #Start screen loop
 run = True
 while run:
     screen.fill((128,0,0))
     startButton = pygame.Rect(310, 335, 100, 50)
-    pygame.draw.rect(screen, (0,0,0), startButton)
+    pygame.draw.rect(screen, (47,79,79), startButton)
     pygame.font.init()
-    green = (0, 255, 0)
-    blue = (0, 0, 128)
     buttonFont = pygame.font.Font('freesansbold.ttf', 15)
-    titleFont = pygame.font.Font('freesansbold.ttf', 55)
-    buttonText = buttonFont.render('START', True, green)
-    titleText = titleFont.render('DIJI', True, green)
+    titleFont = pygame.font.Font('freesansbold.ttf', 100)
+    buttonText = buttonFont.render('START', True, (255,255,255))
+    titleText = titleFont.render('DIJI', True, (255,255,255))
     screen.blit(buttonText, (335,350))
-    screen.blit(titleText, (335,100))
+    screen.blit(titleText, (269,120))
     
     ev = pygame.event.get()
     for event in ev:
@@ -270,31 +265,143 @@ while run:
                 run = False
 
     pygame.display.update()
-#main game loop runs and looks for events
+
+#initializes one graph 
+add_to_graph()
+
+#counts current pixel count until the next target vertex is reached
+current_pixel_count = 0
+total_pixel_count = 0
+
+#keeps track of which targets have already been collected
+collected_targets = []
+collected_targets.append(centerVertex)
+#keeps track of the last target collected in order to run shortest path algorithm
+last_collected_target = centerVertex
+
+#handles pixel counts when player "collects" a target
+def collectTarget(target):
+    collected_targets.append(target)
+    global total_pixel_count 
+    global current_pixel_count    
+    total_pixel_count += current_pixel_count
+    current_pixel_count = 0
+    global last_collected_target 
+    last_collected_target = target
+
+
+def find_shortest_route():
+    shortest_route = 0
+    for x in range(4):
+        global source
+        global target
+        if (collected_targets[x] == centerVertex):
+            source = 'centerVertex'
+            if (collected_targets[x+1] == targetVertex1):
+                target = 'targetVertex1'
+            elif(collected_targets[x+1] == targetVertex2):
+                target = 'targetVertex2'
+            elif(collected_targets[x+1] == targetVertex3):
+                target = 'targetVertex3'
+            elif(collected_targets[x+1] == targetVertex4):
+                target = 'targetVertex4'
+        elif(collected_targets[x] == targetVertex1):
+            source = 'targetVertex1'
+            if (collected_targets[x+1] == targetVertex2):
+                target = 'targetVertex2'
+            elif(collected_targets[x+1] == targetVertex3):
+                target = 'targetVertex3'
+            elif(collected_targets[x+1] == targetVertex4):
+                target = 'targetVertex4'
+            elif(collected_targets[x+1] == centerVertex):
+                target = 'centerVertex'
+        elif(collected_targets[x] == targetVertex2):
+            source = 'targetVertex2'
+            if (collected_targets[x+1] == targetVertex1):
+                target = 'targetVertex1'
+            elif(collected_targets[x+1] == targetVertex3):
+                target = 'targetVertex3'
+            elif(collected_targets[x+1] == targetVertex4):
+                target = 'targetVertex4'
+            elif(collected_targets[x+1] == centerVertex):
+                target = 'centerVertex'
+        elif(collected_targets[x] == targetVertex3):
+            source = 'targetVertex3'
+            if (collected_targets[x+1] == targetVertex2):
+                target = 'targetVertex2'
+            elif(collected_targets[x+1] == targetVertex1):
+                target = 'targetVertex1'
+            elif(collected_targets[x+1] == targetVertex4):
+                target = 'targetVertex4'
+            elif(collected_targets[x+1] == centerVertex):
+                target = 'centerVertex'
+        elif(collected_targets[x]== targetVertex4):
+            source = 'targetVertex4'
+            if (collected_targets[x+1] == targetVertex1):
+                target = 'targetVertex1'
+            elif(collected_targets[x+1] == targetVertex2):
+                target = 'targetVertex2'
+            elif(collected_targets[x+1] == targetVertex3):
+                target = 'targetVertex3'
+            elif(collected_targets[x+1] == centerVertex):
+                target = 'centerVertex'
+        shortest_route += graph.shortest_path(source)[target]
+    return shortest_route
+
+#level1 game loop runs and looks for events
 run = True
 while run:
     ev = pygame.event.get()
     time.sleep(0.002)
+    
     set_up_game()
     connect_vertices_edges()
     connect_center_to_vertices()
-    add_to_graph()
-    
+
     key = pygame.key.get_pressed()
-    if key[pygame.K_a] == True and isOnPath('a') and player.left - 1 != 0:
+    if key[pygame.K_a] == True and isOnPath('a') and player.left - 1 != 0: 
         player.move_ip(-1,0)
-    elif key[pygame.K_d] == True and isOnPath('d') and player.right + 1 != 720:
+        current_pixel_count += 1
+        for x in targetObjects:
+            if (x.collidepoint(player.left - 1, player.top) and x not in collected_targets):
+                collectTarget(x)
+                if len(collected_targets) == 5:
+                    run = False
+
+    elif key[pygame.K_d] == True and isOnPath('d') and player.right + 2 != 720:
         player.move_ip(1, 0)
+        current_pixel_count += 1
+        for x in targetObjects:
+            if (x.collidepoint(player.right + 1, player.top) and x not in collected_targets):
+                collectTarget(x)
+                if len(collected_targets) == 5:
+                    run = False
     elif key[pygame.K_w] == True and isOnPath('w') and player.top - 1 != 0:
         player.move_ip(0, -1)
-    elif key[pygame.K_s] == True and isOnPath('s') and player.bottom + 1 != 720:
+        current_pixel_count  += 1
+        for x in targetObjects:
+            if (x.collidepoint(player.x, player.y - 1) and x not in collected_targets):
+                collectTarget(x)
+                if len(collected_targets) == 5:
+                    run = False
+    elif key[pygame.K_s] == True and isOnPath('s') and player.bottom + 2 != 720:
         player.move_ip(0, 1)
-    
+        current_pixel_count  += 1
+        for x in targetObjects:
+            if (x.collidepoint(player.right, player.bottom + 1) and x not in collected_targets):
+                collectTarget(x)
+                if len(collected_targets) == 5:
+                    run = False
     for event in ev:
         if event.type==pygame.QUIT:
             run = False
 
     pygame.display.update()
+    
+print(collected_targets)
+print(last_collected_target)
+print (total_pixel_count)
+print (find_shortest_route())
 
 pygame.quit()
 
