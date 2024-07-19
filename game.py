@@ -241,31 +241,6 @@ vertexList = [centerVertex, connectAcenter, connectBcenter, connectCcenter, conn
 #Creates a list of all target objects
 targetObjects = [targetVertex1, targetVertex2, targetVertex3, targetVertex4]
 
-#Start screen loop
-run = True
-while run:
-    screen.fill((128,0,0))
-    startButton = pygame.Rect(310, 335, 100, 50)
-    pygame.draw.rect(screen, (47,79,79), startButton)
-    pygame.font.init()
-    buttonFont = pygame.font.Font('freesansbold.ttf', 15)
-    titleFont = pygame.font.Font('freesansbold.ttf', 100)
-    buttonText = buttonFont.render('START', True, (255,255,255))
-    titleText = titleFont.render('DIJI', True, (255,255,255))
-    screen.blit(buttonText, (335,350))
-    screen.blit(titleText, (269,120))
-    
-    ev = pygame.event.get()
-    for event in ev:
-        if event.type==pygame.QUIT:
-            pygame.quit()
-        if event.type==pygame.MOUSEBUTTONDOWN:
-            pos = pygame.mouse.get_pos()
-            if startButton.collidepoint(pos):
-                run = False
-
-    pygame.display.update()
-
 #initializes one graph 
 add_to_graph()
 
@@ -289,7 +264,7 @@ def collectTarget(target):
     global last_collected_target 
     last_collected_target = target
 
-
+#Finds the pixel count using Dijstra's algorithm (gameGraph.shortest_path()) for each of the target vertices in order of collection
 def find_shortest_route():
     shortest_route = 0
     for x in range(4):
@@ -348,60 +323,121 @@ def find_shortest_route():
         shortest_route += graph.shortest_path(source)[target]
     return shortest_route
 
+
+#Start screen loop
+def start_screen():
+    run = True
+    while run:
+        screen.fill((128,0,0))
+        startButton = pygame.Rect(310, 335, 100, 50)
+        pygame.draw.rect(screen, (47,79,79), startButton)
+        pygame.font.init()
+        buttonFont = pygame.font.Font('freesansbold.ttf', 15)
+        titleFont = pygame.font.Font('freesansbold.ttf', 100)
+        buttonText = buttonFont.render('START', True, (255,255,255))
+        titleText = titleFont.render('DIJI', True, (255,255,255))
+        screen.blit(buttonText, (335,350))
+        screen.blit(titleText, (269,120))
+        
+        ev = pygame.event.get()
+        for event in ev:
+            if event.type==pygame.QUIT:
+                pygame.quit()
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                if startButton.collidepoint(pos):
+                    run = False
+
+        pygame.display.update()
+
 #level1 game loop runs and looks for events
-run = True
-while run:
-    ev = pygame.event.get()
-    time.sleep(0.002)
+def game_loop():
+    global current_pixel_count
+    run = True
+    while run:
+        ev = pygame.event.get()
+        time.sleep(0.002)
+        
+        set_up_game()
+        connect_vertices_edges()
+        connect_center_to_vertices()
+
+        key = pygame.key.get_pressed()
+        if key[pygame.K_a] == True and isOnPath('a') and player.left - 1 != 0: 
+            player.move_ip(-1,0)
+            current_pixel_count += 1
+            for x in targetObjects:
+                if (x.collidepoint(player.left - 1, player.top) and x not in collected_targets):
+                    collectTarget(x)
+                    if len(collected_targets) == 5:
+                        run = False
+
+        elif key[pygame.K_d] == True and isOnPath('d') and player.right + 2 != 720:
+            player.move_ip(1, 0)
+            current_pixel_count += 1
+            for x in targetObjects:
+                if (x.collidepoint(player.right + 1, player.top) and x not in collected_targets):
+                    collectTarget(x)
+                    if len(collected_targets) == 5:
+                        run = False
+        elif key[pygame.K_w] == True and isOnPath('w') and player.top - 1 != 0:
+            player.move_ip(0, -1)
+            current_pixel_count  += 1
+            for x in targetObjects:
+                if (x.collidepoint(player.x, player.y - 1) and x not in collected_targets):
+                    collectTarget(x)
+                    if len(collected_targets) == 5:
+                        run = False
+        elif key[pygame.K_s] == True and isOnPath('s') and player.bottom + 2 != 720:
+            player.move_ip(0, 1)
+            current_pixel_count  += 1
+            for x in targetObjects:
+                if (x.collidepoint(player.right, player.bottom + 1) and x not in collected_targets):
+                    collectTarget(x)
+                    if len(collected_targets) == 5:
+                        run = False
+        for event in ev:
+            if event.type==pygame.QUIT:
+                run = False
+        pygame.display.update()
     
-    set_up_game()
-    connect_vertices_edges()
-    connect_center_to_vertices()
+#end screen/play again loop
+def end_screen():
+    run = True
+    while run:
+        ev = pygame.event.get()
+        screen.fill((128, 0, 0))
+        scoreFont = pygame.font.Font('freesansbold.ttf', 25)
+        playAgainButton = pygame.Rect(310, 380, 100, 50)
+        pygame.draw.rect(screen, (47,79,79), playAgainButton)
+        playAgainFont = pygame.font.Font('freesansbold.ttf', 15)
+        scoreText = scoreFont.render('Your chosen route was ' + str((int(percent_efficiency))) + "% as efficient as Diji's path!", True, (255,255,255))
+        playAgainText = playAgainFont.render('Play Again!', True, (255,255,255))
+        scoreText_rect = scoreText.get_rect(center=(720/2, 720/2))
+        screen.blit(scoreText, scoreText_rect)
+        screen.blit(playAgainText, (317, 400))
 
-    key = pygame.key.get_pressed()
-    if key[pygame.K_a] == True and isOnPath('a') and player.left - 1 != 0: 
-        player.move_ip(-1,0)
-        current_pixel_count += 1
-        for x in targetObjects:
-            if (x.collidepoint(player.left - 1, player.top) and x not in collected_targets):
-                collectTarget(x)
-                if len(collected_targets) == 5:
+        for event in ev:
+            if event.type == pygame.QUIT:
+                run = False
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                pos = pygame.mouse.get_pos()
+                if playAgainButton.collidepoint(pos):
                     run = False
+                    return True
 
-    elif key[pygame.K_d] == True and isOnPath('d') and player.right + 2 != 720:
-        player.move_ip(1, 0)
-        current_pixel_count += 1
-        for x in targetObjects:
-            if (x.collidepoint(player.right + 1, player.top) and x not in collected_targets):
-                collectTarget(x)
-                if len(collected_targets) == 5:
-                    run = False
-    elif key[pygame.K_w] == True and isOnPath('w') and player.top - 1 != 0:
-        player.move_ip(0, -1)
-        current_pixel_count  += 1
-        for x in targetObjects:
-            if (x.collidepoint(player.x, player.y - 1) and x not in collected_targets):
-                collectTarget(x)
-                if len(collected_targets) == 5:
-                    run = False
-    elif key[pygame.K_s] == True and isOnPath('s') and player.bottom + 2 != 720:
-        player.move_ip(0, 1)
-        current_pixel_count  += 1
-        for x in targetObjects:
-            if (x.collidepoint(player.right, player.bottom + 1) and x not in collected_targets):
-                collectTarget(x)
-                if len(collected_targets) == 5:
-                    run = False
-    for event in ev:
-        if event.type==pygame.QUIT:
-            run = False
+        pygame.display.update()
 
-    pygame.display.update()
-    
-print(collected_targets)
-print(last_collected_target)
-print (total_pixel_count)
-print (find_shortest_route())
+
+start_screen()
+game_loop()
+shortest_route = find_shortest_route()
+percent_efficiency = ((shortest_route - (total_pixel_count - shortest_route)) / shortest_route) * 100
+#handles play again functionality
+if (end_screen()):
+    player.move((345, 345))
+    game_loop()
+
 
 pygame.quit()
 
