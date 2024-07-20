@@ -53,6 +53,11 @@ class Graph:
     def get_neighbors(self, u):
         return self.vertices[u].neighbors
 
+    #clears this graph of all vertices and edges
+    def clear_graph(self):
+        self.vertices.clear()
+        self.edge_indices.clear()
+        self.edges.clear()
         
     #Returns shortest path to each vertex from the specified source using Dijkstra's algorithm.
     def shortest_path(self, source):

@@ -9,6 +9,11 @@ res = (720, 720)
 screen = pygame.display.set_mode(res)
 graph = gameGraph.Graph()
 
+#used to generate random coordinate locations in the specified area of the screen
+def generateRandomLocation(startx, endx, starty, endy):
+    coordinates = (random.randint(startx, endx), random.randint(starty,endy))
+    return coordinates
+
 #randomly picks one of two ways to get from one vertex to another using two lines
 def generatePath(start, end):
     path = random.randint(1,2)
@@ -17,41 +22,6 @@ def generatePath(start, end):
         return (start.x, end.y, 1)
     elif path == 2:
         return (end.x, start.y, 2)
-
-#used to generate random coordinate locations in the specified area of the screen
-def generateRandomLocation(startx, endx, starty, endy):
-    coordinates = (random.randint(startx, endx), random.randint(starty,endy))
-    return coordinates
-
-#Used to ensure player can only walk on the generated path
-def isOnPath(key):
-    if (key == 'a'):
-        if pygame.Surface.get_at(screen, (player.left - 1, player.top)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.left - 1, player.bottom)) == (44, 21, 0):
-            if pygame.Surface.get_at(screen, (player.left - 1, player.centery)) == (44, 21, 0):
-                return True
-        for x in vertexList:
-            if x.collidepoint(player.left - 1, player.top):
-                return True
-    elif (key == 'd'):
-        if pygame.Surface.get_at(screen, (player.right + 1, player.bottom)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.right + 1, player.top)) == (44, 21, 0):
-            if pygame.Surface.get_at(screen, (player.right + 1, player.centery)) == (44, 21, 0):
-                return True
-        for x in vertexList:
-            if x.collidepoint(player.right + 1, player.bottom):
-                return True
-    elif (key == 'w'):
-        if pygame.Surface.get_at(screen, (player.left, player.top - 1)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.right, player.top - 1)) == (44, 21, 0):
-            return True
-        for x in vertexList:
-            if x.collidepoint(player.x, player.y - 1):
-                return True    
-    elif (key == 's'):
-        if pygame.Surface.get_at(screen, (player.right, player.bottom + 1)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.left, player.bottom + 1)) == (44, 21, 0):
-            return True
-        for x in vertexList:
-            if x.collidepoint(player.right, player.bottom + 1):
-                return True
-    return False
 
 centerVertex = pygame.Rect((335, 335, 51, 51)) 
 #creates target vertices
@@ -88,11 +58,44 @@ connectDcenter = pygame.Rect(cordsD[0], cordsD[1], 51, 51)
 edgeD1 = pygame.Rect(670, vertexD.top, 51, 51)
 edgeD2 = pygame.Rect(vertexD.left, 670, 51, 51)
 
-player = pygame.Rect((345,345,30,30))
+player = pygame.Rect((345,345,30,30))   
+
+
+
+#Used to ensure player can only walk on the generated path
+def isOnPath(key):
+    if (key == 'a'):
+        if pygame.Surface.get_at(screen, (player.left - 1, player.top)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.left - 1, player.bottom)) == (44, 21, 0):
+            if pygame.Surface.get_at(screen, (player.left - 1, player.centery)) == (44, 21, 0):
+                return True
+        for x in vertexList:
+            if x.collidepoint(player.left - 1, player.top):
+                return True
+    elif (key == 'd'):
+        if pygame.Surface.get_at(screen, (player.right + 1, player.bottom)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.right + 1, player.top)) == (44, 21, 0):
+            if pygame.Surface.get_at(screen, (player.right + 1, player.centery)) == (44, 21, 0):
+                return True
+        for x in vertexList:
+            if x.collidepoint(player.right + 1, player.bottom):
+                return True
+    elif (key == 'w'):
+        if pygame.Surface.get_at(screen, (player.left, player.top - 1)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.right, player.top - 1)) == (44, 21, 0):
+            return True
+        for x in vertexList:
+            if x.collidepoint(player.x, player.y - 1):
+                return True    
+    elif (key == 's'):
+        if pygame.Surface.get_at(screen, (player.right, player.bottom + 1)) == (44, 21, 0) and pygame.Surface.get_at(screen, (player.left, player.bottom + 1)) == (44, 21, 0):
+            return True
+        for x in vertexList:
+            if x.collidepoint(player.right, player.bottom + 1):
+                return True
+    return False
+
 
 #randomly generates the physical roadmap for diji
 def set_up_game():
-    screen.fill((241, 90, 34)) 
+    screen.fill((104, 0, 255)) 
     #spawn in all vertices
     pygame.draw.rect(screen, (44, 21, 0), centerVertex)
     pygame.draw.rect(screen, (44, 21, 0), vertexA)
@@ -120,7 +123,6 @@ def set_up_game():
 
 #Connects center vertex to the intermediate vertices, connects the intermediate vertices to the respective quadrant vertex
 def connect_center_to_vertices():
-        
         pygame.draw.rect(screen, (44, 21, 0), connectAcenter)
         if cordsA[2] == 1:
             pygame.draw.line(screen, (44, 21, 0), (centerVertex.midleft), (connectAcenter.midleft), 51)
@@ -184,7 +186,6 @@ def calculate_distance(vertex1, vertex2):
 
 #uses gameGraph's Graph and Vertex classes to create an undirected weighted graph with all vertices
 def add_to_graph():
-    graph = gameGraph.Graph()
     graph.add_vertex(gameGraph.Vertex('centerVertex'))
     graph.add_vertex(gameGraph.Vertex('connectAcenter'))
     graph.add_vertex(gameGraph.Vertex('connectBcenter'))
@@ -251,11 +252,13 @@ total_pixel_count = 0
 #keeps track of which targets have already been collected
 collected_targets = []
 collected_targets.append(centerVertex)
-#keeps track of the last target collected in order to run shortest path algorithm
-last_collected_target = centerVertex
+
+crash_sound = pygame.mixer.Sound("pluck_sound.mp3")
 
 #handles pixel counts when player "collects" a target
 def collectTarget(target):
+    pygame.mixer.Sound.play(crash_sound)
+
     collected_targets.append(target)
     global total_pixel_count 
     global current_pixel_count    
@@ -323,21 +326,29 @@ def find_shortest_route():
         shortest_route += graph.shortest_path(source)[target]
     return shortest_route
 
-
 #Start screen loop
 def start_screen():
     run = True
     while run:
-        screen.fill((128,0,0))
+        background = pygame.image.load("background.webp")
+        background_top = screen.get_height() - background.get_height()
+        background_left = screen.get_width()/2 - background.get_width()/2
+        screen.blit(background, (background_left, background_top))
         startButton = pygame.Rect(310, 335, 100, 50)
         pygame.draw.rect(screen, (47,79,79), startButton)
         pygame.font.init()
-        buttonFont = pygame.font.Font('freesansbold.ttf', 15)
-        titleFont = pygame.font.Font('freesansbold.ttf', 100)
+        buttonFont = pygame.font.SysFont('courier', 15)
+        collectFont = pygame.font.SysFont('courier', 23, True)
+        titleFont = pygame.font.SysFont('courier', 100)
+        collectText = collectFont.render("How efficiently can you reach all of the targets?", True, (0,0,0))
         buttonText = buttonFont.render('START', True, (255,255,255))
-        titleText = titleFont.render('DIJI', True, (255,255,255))
-        screen.blit(buttonText, (335,350))
-        screen.blit(titleText, (269,120))
+        titleText = titleFont.render('DIJI', True, (0,0,0))
+        titleText_rect = titleText.get_rect(center=(720/2, 200))
+        collectText_rect = collectText.get_rect(center=(720/2, 300))
+        startText_rect = buttonText.get_rect(center= (720/2, 360))
+        screen.blit(buttonText, startText_rect)
+        screen.blit(collectText, collectText_rect)
+        screen.blit(titleText, titleText_rect)
         
         ev = pygame.event.get()
         for event in ev:
@@ -356,7 +367,7 @@ def game_loop():
     run = True
     while run:
         ev = pygame.event.get()
-        time.sleep(0.002)
+        time.sleep(0.000)
         
         set_up_game()
         connect_vertices_edges()
@@ -406,37 +417,44 @@ def end_screen():
     run = True
     while run:
         ev = pygame.event.get()
-        screen.fill((128, 0, 0))
-        scoreFont = pygame.font.Font('freesansbold.ttf', 25)
-        playAgainButton = pygame.Rect(310, 380, 100, 50)
-        pygame.draw.rect(screen, (47,79,79), playAgainButton)
-        playAgainFont = pygame.font.Font('freesansbold.ttf', 15)
-        scoreText = scoreFont.render('Your chosen route was ' + str((int(percent_efficiency))) + "% as efficient as Diji's path!", True, (255,255,255))
-        playAgainText = playAgainFont.render('Play Again!', True, (255,255,255))
+        background = pygame.image.load("background.webp")
+        background_top = screen.get_height() - background.get_height()
+        background_left = screen.get_width()/2 - background.get_width()/2
+        screen.blit(background, (background_left, background_top))
+        scoreFont = pygame.font.SysFont('courier', 23, True)
+        scoreText = scoreFont.render('YOUR CHOSEN ROUTE WAS ' + str((int(percent_efficiency))) + "% EFFICIENT!", True, (0,0,0))
         scoreText_rect = scoreText.get_rect(center=(720/2, 720/2))
         screen.blit(scoreText, scoreText_rect)
-        screen.blit(playAgainText, (317, 400))
-
+       
         for event in ev:
             if event.type == pygame.QUIT:
                 run = False
-            if event.type==pygame.MOUSEBUTTONDOWN:
-                pos = pygame.mouse.get_pos()
-                if playAgainButton.collidepoint(pos):
-                    run = False
-                    return True
-
+                   
         pygame.display.update()
 
 
+end_sound = pygame.mixer.Sound("good!.mp3")
+fail_sound = pygame.mixer.Sound("fail.mp3")
+average_sound = pygame.mixer.Sound("average.mp3")
+
+#handles game states
 start_screen()
 game_loop()
-shortest_route = find_shortest_route()
-percent_efficiency = ((shortest_route - (total_pixel_count - shortest_route)) / shortest_route) * 100
-#handles play again functionality
-if (end_screen()):
-    player.move((345, 345))
-    game_loop()
+#only calculated percentage if the user collected all targets
+if len(collected_targets) == 5:
+    shortest_route = find_shortest_route()
+    percent_efficiency = ((shortest_route - (total_pixel_count - shortest_route)) / shortest_route) * 100
+    if percent_efficiency < 0:
+        percent_efficiency = 0
+    if percent_efficiency >= 50 and percent_efficiency < 80:
+        pygame.mixer.Sound.play(average_sound)
+    if (percent_efficiency > 80):
+        pygame.mixer.Sound.play(end_sound)
+    elif (percent_efficiency < 50):
+        pygame.mixer.Sound.play(fail_sound)
+    
+
+    end_screen()
 
 
 pygame.quit()
