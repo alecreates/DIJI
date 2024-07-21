@@ -432,7 +432,6 @@ def end_screen():
                    
         pygame.display.update()
 
-
 end_sound = pygame.mixer.Sound("good!.mp3")
 fail_sound = pygame.mixer.Sound("fail.mp3")
 average_sound = pygame.mixer.Sound("average.mp3")
@@ -448,14 +447,13 @@ if len(collected_targets) == 5:
         percent_efficiency = 0
     if percent_efficiency >= 50 and percent_efficiency < 80:
         pygame.mixer.Sound.play(average_sound)
-    if (percent_efficiency > 80):
+    if (percent_efficiency >= 80):
         pygame.mixer.Sound.play(end_sound)
     elif (percent_efficiency < 50):
         pygame.mixer.Sound.play(fail_sound)
+
     
-
     end_screen()
-
 
 pygame.quit()
 
