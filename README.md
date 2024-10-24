@@ -45,6 +45,6 @@ Before attempting to clone the repo, make sure you have installed the necessary 
     ```
 
 # Additional Notes
-Exiting the Game: You can usually exit the game by closing the game window or pressing Esc.
-Troubleshooting: If you encounter any issues with running the game, ensure you have the correct version of Python and that Pygame is properly installed.
+-Exiting the Game: You can usually exit the game by closing the game window or pressing Esc.
+-Troubleshooting: If you encounter any issues with running the game, ensure you have the correct version of Python and that Pygame is properly installed.
 
