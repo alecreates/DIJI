@@ -9,8 +9,8 @@ Diji is a short game created using Python's pygame library that generates random
 
 ## Technologies Used
 
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-Pygame Library
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) 
+![Pygame](https://img.shields.io/badge/pygame-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ Before attempting to clone the repo, make sure you have installed the necessary 
 1. Clone the repository:
     ```bash
     git clone https://github.com/alecreates/DIJI.git
-    cd yourgame
+    cd DIJI
     ```
 
 2. (Optional) Create and activate a virtual environment:
@@ -43,4 +43,8 @@ Before attempting to clone the repo, make sure you have installed the necessary 
     ```bash
     python game.py
     ```
+
+# Additional Notes
+Exiting the Game: You can usually exit the game by closing the game window or pressing Esc.
+Troubleshooting: If you encounter any issues with running the game, ensure you have the correct version of Python and that Pygame is properly installed.
 
