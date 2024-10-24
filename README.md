@@ -16,11 +16,31 @@ Pygame Library
 
 Before attempting to clone the repo, make sure you have installed the necessary tools:
 
-1. Python 3.x: You can download Python from the official Python website.
+1. Python 3.x: You can download Python from the official [Python website](https://www.python.org/).
 2. Pygame Library: Install Pygame using **pip install pygame**.
 
 # Installation Instructions
 
-1. 
+1. Clone the repository:
+    ```bash
+    git clone https://github.com/alecreates/DIJI.git
+    cd yourgame
+    ```
 
+2. (Optional) Create and activate a virtual environment:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # For Mac/Linux
+    venv\Scripts\activate     # For Windows
+    ```
+
+3. Install dependencies (if not done already):
+    ```bash
+    pip install pygame
+    ```
+
+4. Run the game:
+    ```bash
+    python game.py
+    ```
 
