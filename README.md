@@ -7,6 +7,20 @@ Diji is a short game created using Python's pygame library that generates random
 > [!NOTE] 
 > this game is not meant to be challenging and is meant to display Dikjstra's capabilities in a game-like context.
 
+## Technologies Used
 
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+Pygame Library
+
+## Prerequisites
+
+Before attempting to clone the repo, make sure you have installed the necessary tools:
+
+1. Python 3.x: You can download Python from the official Python website.
+2. Pygame Library: Install Pygame using **pip install pygame**.
+
+# Installation Instructions
+
+1. 
 
 
