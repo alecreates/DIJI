@@ -9,6 +9,9 @@ Diji is a short game created using Python's pygame library that generates random
 
 <img src="https://github.com/user-attachments/assets/ba6d0384-718a-4a58-8680-83285016ff3e" alt="In Game" width="300"/>
 
+### Controls
+Use AWSD to navigate the player around the randomly generated map.
+
 ## Technologies Used
 
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) 
