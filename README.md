@@ -7,9 +7,7 @@ Diji is a short game created using Python's pygame library that generates random
 > [!NOTE] 
 > this game is not meant to be challenging and is meant to display Dikjstra's capabilities in a game-like context.
 
-![dijipic](https://github.com/user-attachments/assets/ba6d0384-718a-4a58-8680-83285016ff3e)
-
-<img src="https://github.com/user-attachments/assets/ba6d0384-718a-4a58-8680-83285016ff3e" alt="My Image" width="300"/>
+<img src="https://github.com/user-attachments/assets/ba6d0384-718a-4a58-8680-83285016ff3e" alt="In Game" width="300"/>
 
 ## Technologies Used
 
